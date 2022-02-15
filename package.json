@@ -3,13 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.4.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "aws-sdk": "^2.1074.0",
+    "mock-aws-s3": "^4.0.2",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
-    "web-vitals": "^2.1.4"
+    "fs": "^0.0.1-security",
+    "util": "^0.12.4",
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,5 +44,22 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "browser": {
+    "crypto": false,
+    "fs": false,
+    "path": false,
+    "os": false,
+    "net": false,
+    "stream": false,
+    "tls": false
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.3",
+    "babel-preset-env": "^1.7.0",
+    "file": "^0.2.2",
+    "system": "^2.0.1",
+    "webpack": "^5.69.0"
   }
 }
