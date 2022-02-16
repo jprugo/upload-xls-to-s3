@@ -10,20 +10,20 @@ import * as XLSX from "xlsx";
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 
+import AWS from 'aws-sdk'
 
 // AWS UTILS REGION
-/*
-var aws = require('aws-sdk');
 
-aws.config.update({
+AWS.config.update({
   region: 'us-east-1', // Put your aws region here
   accessKeyId: process.env.REACT_APP_AWS_ACCES_KEY,
   secretAccessKey: process.env.REACT_APP_AWS_SECRET_KEY
 });
 
-var s3 = new aws.S3({ apiVersion: '2006-03-01' });
-
-var AWSMock = require('mock-aws-s3');*/
+const s3 = new AWS.S3({
+  params: { Bucket: process.env.REACT_APP_BUCKET_NAME },
+  region: 'us-east-1'
+});
 
 function App() {
 
@@ -45,7 +45,7 @@ function App() {
       function (e) {
         let output = XLSX.utils.sheet_to_csv(book.Sheets[e.name], { header: e.header });
         return {
-          fileName: e.name,
+          fileName: `${e.name}.csv`,
           body: output
         };
       }
@@ -120,18 +120,22 @@ function App() {
     data.forEach(
       function (value, index, array) {
 
-        var uploadParams = { Bucket: process.env.REACT_APP_BUCKET_NAME, Key: value.fileName + '.csv', Body: value.body };
+        const params = {
+          //ACL: 'public-read',
+          Body: value.body,
+          Bucket: process.env.REACT_APP_BUCKET_NAME,
+          Key: value.fileName
+        };
 
-        console.log(uploadParams);
+        s3.putObject(params)
+          .on('httpUploadProgress', (evt) => {
+            console.log(Math.round((evt.loaded / evt.total) * 100));
+            //setProgress(Math.round((evt.loaded / evt.total) * 100))
+          })
+          .send((err) => {
+            if (err) console.log(err)
+          })
 
-        // call S3 to retrieve upload file to specified bucket
-        /*s3.upload(uploadParams, function (err, data) {
-          if (err) {
-            console.log(`Error uploading file: ${value.fileName}`, err);
-          } if (data) {
-            console.log(`file: ${value.fileName} was uploaded succesfully`, data.Location);
-          }
-        });*/
       }
     );
   }
